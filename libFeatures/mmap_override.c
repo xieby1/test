@@ -1,7 +1,7 @@
 // This snippet tests the characteristics of mmap, to see what will
 // happen when the to-be-allocated memory has been already allocated.
 //
-// Here are 3 allocating position cases need to be carefully examed:
+// Here are 4 allocating position cases need to be carefully examed:
 // 1. Overlap:                       
 //      [mapped memory 1]       |       [mapped memory 1]
 //          [mapped memory 2]   |   [mapped memory 2]
@@ -11,6 +11,9 @@
 // 3. Insert:
 //      [mapped     memory     1]
 //          [mapped memory 2]
+// 4. Adjoin:
+//      [mapped memory 1]
+//                       [mapped memory 2]
 //
 // Besides, in each above case, the different prot and flags need to
 // be carefully examed:
@@ -32,7 +35,7 @@
 #include <fcntl.h>
 #include <string.h>
 
-char command[16];
+char command[256];
 
 // Address Start|End|Length
 void test(char* desc, size_t a2s_a1s, size_t a1l, size_t a2l,
@@ -54,6 +57,9 @@ void test(char* desc, size_t a2s_a1s, size_t a1l, size_t a2l,
         perror("mmap a2");
     if(a2s != a1s+a2s_a1s)
         printf("a2s not expected\n");
+    void *low = a1s<a2s? a1s:a2s;
+    void *high = a1s+a1l>a2s+a2l? a1s+a1l:a2s+a2l;
+    sprintf(command, "pmap --range %p,%p %d", low, high-1, getpid());
     if (system(command) == -1)
         perror("System command");
     munmap(a1s, a1l);
@@ -65,13 +71,14 @@ int main(void)
 {
     printf("pid = %d\n", getpid());
     sprintf(command, "pmap %d", getpid());
+    //sprintf(command, "cat /proc/%d/maps", getpid());
 
     test("1.1.1. Overlap [ANON] [ANON] same prot",
             0x1000, 0x2000, 0x2000, PROT_READ, PROT_READ,
             MAP_PRIVATE|MAP_ANONYMOUS, MAP_PRIVATE|MAP_ANONYMOUS);
 
     test("1.1.2. Overlap [ANON] [ANON] diff prot",
-            0x1000, 0x2000, 0x2000, PROT_READ, PROT_NONE,
+            0x1000, 0x2000, 0x2000, PROT_READ, PROT_EXEC,
             MAP_PRIVATE|MAP_ANONYMOUS, MAP_PRIVATE|MAP_ANONYMOUS);
 
     test("2.1.1. Cover [ANON] [ANON] same prot",
@@ -90,5 +97,9 @@ int main(void)
             0x1000, 0x3000, 0x1000, PROT_EXEC, PROT_WRITE,
             MAP_PRIVATE|MAP_ANONYMOUS, MAP_PRIVATE|MAP_ANONYMOUS);
 
+    test("4.1.1 Adjoin [ANON] [ANON] same prot",
+            0x1000, 0x1000, 0x1000, PROT_EXEC, PROT_EXEC,
+            MAP_PRIVATE|MAP_ANONYMOUS, MAP_PRIVATE|MAP_ANONYMOUS);
+            
     return 0;
 }
