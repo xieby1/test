@@ -11,3 +11,4 @@ a.out
 *.o
 *.obj
 expm
+compile_commands.json
