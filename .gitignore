@@ -7,8 +7,14 @@
 # Unignore all dirs
 !*/
 
+# files
 a.out
 *.o
 *.obj
-expm
 compile_commands.json
+temp*
+tmp*
+
+# directories
+expm
+.clangd
