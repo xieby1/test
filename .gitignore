@@ -18,6 +18,7 @@ a.out
 compile_commands.json
 temp*
 tmp*
+*.swp
 
 # directories
 expm
