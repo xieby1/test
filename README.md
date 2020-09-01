@@ -1,11 +1,21 @@
-# test
+# xieby1's Test Repository
 
-test project
+## Naming&Categorization Convention
 
-# another test
+### Directory
 
-push from xiebenyi by SSH 2019.11.13
+**Snippets in General Use**:
 
-# backup
+* `include/`
 
-backup by syncthing 2020.6.17
+**Test Categories**:
+
+* `lang/`: test programming language features
+* `lib/`: test library features
+* `x86Inst/`: test x86 instruction (assembly and machine code) features
+
+**Note**: the directory name suffix `.f` means family, indicating this directory containing a family of some kind of test. E.g. `print.f/` contains the tests for print family, like printf, sprintf, dprintf...
+
+### File
+
+The file name simply describes the test purpose.
