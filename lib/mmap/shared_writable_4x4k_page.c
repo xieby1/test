@@ -23,6 +23,7 @@
 #include "4x4k_pages.h"
 
 const char *path = "/page.4k.size";
+const int prot[4] = {PROT_WRITE|PROT_READ, PROT_READ, PROT_EXEC, PROT_NONE};
 
 int main(void)
 {
@@ -30,14 +31,43 @@ int main(void)
     int fd = shm_open(path, O_RDWR|O_CREAT, S_IRWXU|S_IRWXG|S_IRWXO);
     assert_msg_perror( fd>=0, "shm_open");
 
-    size_t real_len = PAGE_16K_SIZE;
-    ADDR real_start = mmap_16k_aligned();
+    {
+        int ret = ftruncate(fd, PAGE_4K_SIZE);
+        assert_msg_perror( ret==0, "ftruncate" );
+    }
 
-    ADDR a = (ADDR)mmap((void*)real_start, PAGE_4K_SIZE, PROT_WRITE, MAP_SHARED|MAP_FIXED, fd, 0);
+    ADDR start = mmap_16k_aligned();
+
+    for ( int i=1; i<4; i++)
+    {
+        void *ea = (void*)(start + PAGE_4K_SIZE*i);
+        void *a = mmap(ea, PAGE_4K_SIZE, prot[i],
+                MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0);
+        assert_msg_perror(a!=(void*)-1, "mmap %d-th 4k", i);
+        assert_msg(a==ea, "mmap %d-th 4k not fixed", i);
+    }
+
+    ADDR a = (ADDR)mmap((void*)start, PAGE_4K_SIZE, prot[0],
+            MAP_SHARED|MAP_FIXED, fd, 0);
     assert_msg_perror(a!=-1, "mmap 4k shared writable page");
-    assert_msg(a==real_start, "mmap allocates fixed memory failed, " \
-            "expected %p, actual %p\n", (void*)real_start, (void*)a);
+    assert_msg(a==start, "mmap allocates fixed memory failed, " \
+            "expected %p, actual %p\n", (void*)start, (void*)a);
 
+    int *p;
+    // try to read the readable 4k page
+    p = (int*)(start + PAGE_4K_SIZE*1);
+    {
+        int temp = *p;
+        printf("neighbor reabable page is able to be read, %d\n", temp);
+    }
+    // try to write the writable 4k page
+    p = (int*)(start);
+    *p = 0x7893;
+    printf("shared writable page is able to be written\n");
+    {
+        int temp = *p;
+        printf("the written value %x\n", temp);
+    }
     /*
     pid_t forkpid = fork();
     if( forkpid<0 )

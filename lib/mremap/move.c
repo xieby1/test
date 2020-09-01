@@ -23,15 +23,22 @@ int main(void)
     assert_msg_perror(newa != (void *)-1, "reserve newa");
 
     {
-        void *newa_actual = mremap(olda, PAGE_SIZE, PAGE_SIZE,
+        void *actual = mremap(olda, PAGE_SIZE, PAGE_SIZE,
                                    MREMAP_MAYMOVE | MREMAP_FIXED, newa);
-        assert_msg_perror(newa_actual != (void *)-1, "mremap");
-        assert_msg(newa_actual == newa, "mremap");
+        assert_msg_perror(actual != (void *)-1, "mremap");
+        assert_msg(actual == newa, "mremap");
     }
-
     printf("currently move to new address %p\n", newa);
     buf = (char *)newa;
     printf("%s", buf);
+
+    {
+        void *actual = mremap(newa, PAGE_SIZE, PAGE_SIZE,
+                MREMAP_MAYMOVE | MREMAP_FIXED, olda);
+        assert_msg_perror(actual != (void *)-1, "mremap");
+        assert_msg(actual == olda, "mremap");
+    }
+    printf("currently move back to old address %p\n", olda);
 
     return 0;
 }
