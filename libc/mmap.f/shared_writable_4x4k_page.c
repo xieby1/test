@@ -38,6 +38,7 @@ int main(void)
 
     ADDR start = mmap_16k_aligned();
 
+    // mmap 3 4k neighbor pages
     for ( int i=1; i<4; i++)
     {
         void *ea = (void*)(start + PAGE_4K_SIZE*i);
@@ -47,6 +48,7 @@ int main(void)
         assert_msg(a==ea, "mmap %d-th 4k not fixed", i);
     }
 
+    // mmap shared writable page
     ADDR a = (ADDR)mmap((void*)start, PAGE_4K_SIZE, prot[0],
             MAP_SHARED|MAP_FIXED, fd, 0);
     assert_msg_perror(a!=-1, "mmap 4k shared writable page");
@@ -84,6 +86,22 @@ int main(void)
 
     }
     */
+
+    // try to munmap shared writable page
+    {
+        int ret = munmap((void *)start, PAGE_4K_SIZE);
+        assert_msg_perror(ret != -1, "munmap");
+    }
+    printf("shared writable page is unmapped\n");
+
+    // try to write the readable page
+    p = (int*)(start + PAGE_4K_SIZE*1);
+    {
+        int temp = *p;
+        printf("neighbor reabable page is able to be read, %d\n", temp);
+        printf("Noted: this read is not supposed to call frag_map\n");
+    }
+
     printf("No problem\n");
     shm_unlink(path);
     return 0;
