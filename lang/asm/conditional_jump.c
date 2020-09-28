@@ -8,11 +8,14 @@
 
 #include <stdio.h> /* fprintf, printf */
 
-static void not_taken_output(void) { printf("jump not taken\n"); }
+__attribute__((used)) static void not_taken_output(void)
+{
+    printf("jump not taken\n");
+}
 
-static void taken_output(void) { printf("jump taken\n"); }
+__attribute__((used)) static void taken_output(void) { printf("jump taken\n"); }
 
-static void jump_equal(long a, long b)
+__attribute__((noinline)) static void jump_equal(long a, long b)
 {
     asm volatile(
 #ifdef __x86_64__
