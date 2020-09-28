@@ -8,7 +8,7 @@
     do { \
         if (!(cond)) { \
             fprintf(stderr, "\033[31mxby_assert failed\033[m @ %s: %s: %d: \n", \
-                    __FUNCTION__, __FILE__, __LINE__); \
+                    __FILE__, __FUNCTION__, __LINE__); \
             fprintf(stderr, __VA_ARGS__); \
             abort(); \
         } \
