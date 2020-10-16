@@ -7,11 +7,8 @@
 # Unignore all dirs
 !*/
 
-# Unignore files
-!Makefile
-!makefile
-
-# files
+# common
+## files
 a.out
 *.o
 *.obj
@@ -19,7 +16,11 @@ compile_commands.json
 temp*
 tmp*
 *.swp
-
-# directories
+## directories
 expm
 .clangd
+
+# cmake
+*.cmake
+CMakeCache.txt
+CMakeFiles
