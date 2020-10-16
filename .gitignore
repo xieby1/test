@@ -16,12 +16,14 @@ compile_commands.json
 temp*
 tmp*
 *.swp
+*.exe
 ## directories
 expm
 .clangd
 
 # cmake
-*.cmake
+CTestTestfile.cmake
+cmake_install.cmake
 CMakeCache.txt
 CMakeFiles
 Testing

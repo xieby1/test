@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 enable_testing()
 
 set(SOURCE_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../..)
-include(${SOURCE_ROOT}/CMakeCommon.txt)
+include(${SOURCE_ROOT}/common.cmake)
 
 add_executables_and_tests(
     override
