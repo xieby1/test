@@ -1,20 +1,14 @@
 cmake_minimum_required(VERSION 3.16)
+enable_testing()
 
-add_executable(
+set(SOURCE_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../..)
+include(${SOURCE_ROOT}/CMakeCommon.txt)
+
+add_executables_and_tests(
     override
-    override.c
-    )
-add_executable(
     move
-    move.c
-    )
-add_executable(
     shared_writable_4x4k_page
-    shared_writable_4x4k_page.c
-    )
-add_executable(
     4x4k_pages_access_prot
-    4x4k_pages_access_prot.c
     )
 
 set_target_properties(
@@ -23,6 +17,6 @@ set_target_properties(
     PROPERTIES
     COMPILE_OPTIONS "-g;-m32"
     LINK_OPTIONS "-m32"
-    INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR};${CMAKE_CURRENT_SOURCE_DIR}/../../include"
+    INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR};${SOURCE_ROOT}/include;"
     LINK_LIBRARIES "rt"
     )
