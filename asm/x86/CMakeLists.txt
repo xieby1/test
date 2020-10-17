@@ -4,7 +4,7 @@ enable_testing()
 set(SOURCE_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../..)
 include(${SOURCE_ROOT}/common.cmake)
 
-add_bare_asms_and_tests(
+set(bare_asms
     aaa
     conditionalCode
     cpuid
@@ -17,3 +17,13 @@ add_bare_asms_and_tests(
     writeMemNoPrint
     writeMem
     )
+
+add_bare_asms_and_tests(${bare_asms})
+
+foreach(name ${bare_asms})
+    set_property(
+        TEST test_${name}
+        PROPERTY
+            LABELS "asm;x86;"
+        )
+endforeach()

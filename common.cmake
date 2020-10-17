@@ -1,12 +1,16 @@
+macro(add_custom_test name)
+    add_test(
+        NAME test_${name}
+        COMMAND $ENV{TEST_CMD_PRE} ${name}
+        )
+endmacro()
+
 macro(add_executables_and_tests)
     foreach(name ${ARGV})
         add_executable(
             ${name}
             ${name}.c)
-        add_test(
-            NAME test_${name}
-            COMMAND ${name}
-            )
+        add_custom_test(${name})
     endforeach()
 endmacro()
 
@@ -21,9 +25,6 @@ macro(add_bare_asms_and_tests)
             COMPILE_OPTIONS "-m32;"
             LINK_OPTIONS "-m32;-nostdlib;"
             )
-        add_test(
-            NAME test_${name}
-            COMMAND ${name}
-            )
+        add_custom_test(${name})
     endforeach()
 endmacro()
