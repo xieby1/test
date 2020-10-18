@@ -24,6 +24,11 @@ foreach(name ${bare_asms})
     set_property(
         TEST test_${name}
         PROPERTY
-            LABELS "asm;x86;"
+            LABELS 
+                "\
+                goal_test;\
+                arch_x86;\
+                lang_asm;\
+                "
         )
 endforeach()

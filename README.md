@@ -44,6 +44,18 @@ Test snippets are categorized by programming stack (programming abstraction laye
 
 The file name simply describes the test purpose.
 
+### CTest Labels
+
+* the goal of writing this test
+  * `goal_test`: to test and determine XXX right or wrong.
+  * `goal_learn`: to figure out and learn the features of XXX, it is like an experiment, not intended to prove XXX right or wrong.
+* architecture
+  * `arch_all`
+  * `arch_x86`
+* Programming Language
+  * `lang_asm`: assembly, especially assembly without linking against standard libraries.
+  * `lang_c`
+
 ## TODO: Content-Guided Categorization
 
 * All kinds of `hello`
