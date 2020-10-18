@@ -20,3 +20,25 @@ set_target_properties(
     INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR};${SOURCE_ROOT}/include;"
     LINK_LIBRARIES "rt"
     )
+
+set_tests_properties(
+    test_shared_writable_4x4k_page
+    test_4x4k_pages_access_prot
+    PROPERTIES
+        LABELS "\
+            goal_test;\
+            arch_x86;\
+            lang_c;\
+            "
+    )
+
+set_tests_properties(
+    test_override
+    test_move
+    PROPERTIES
+        LABELS "\
+            goal_learn;\
+            arch_all;\
+            lang_c;\
+            "
+    )
