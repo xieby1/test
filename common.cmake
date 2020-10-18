@@ -1,7 +1,10 @@
 macro(add_custom_test name)
     add_test(
         NAME test_${name}
-        COMMAND $ENV{TEST_CMD_PRE} ${name}
+        COMMAND 
+            ${CMAKE_COMMAND}
+            -DTEST_EXECUTABLE=$<TARGET_FILE:${name}>
+            -P ${SOURCE_ROOT}/runtest.cmake
         )
 endmacro()
 
